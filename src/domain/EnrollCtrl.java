@@ -8,9 +8,16 @@ import domain.exceptions.EnrollmentRulesViolationException;
 public class EnrollCtrl {
 	public void enroll(Student s, List<CSE> courses) throws EnrollmentRulesViolationException {
         checkHasPassedCourse(s, courses);
-        Map<Term, Map<Course, Double>> transcript = s.getTranscript();
-		for (CSE o : courses) {
+        for (CSE o : courses)
             o.checkHasPassedPrerequisites(s);
+        checkTimeConflicts(courses);
+        checkHasRequestGPARequirements(s, courses);
+        for (CSE o : courses)
+			s.takeCourse(o.getCourse(), o.getSection());
+	}
+
+    private void checkTimeConflicts(List<CSE> courses) throws EnrollmentRulesViolationException {
+        for (CSE o : courses) {
             for (CSE o2 : courses) {
                 if (o == o2)
                     continue;
@@ -19,11 +26,8 @@ public class EnrollCtrl {
                 if (o.getCourse().equals(o2.getCourse()))
                     throw new EnrollmentRulesViolationException(String.format("%s is requested to be taken twice", o.getCourse().getName()));
             }
-		}
-        checkHasRequestGPARequirements(s, courses);
-        for (CSE o : courses)
-			s.takeCourse(o.getCourse(), o.getSection());
-	}
+        }
+    }
 
     private void checkHasPassedCourse(Student s, List<CSE> courses) throws EnrollmentRulesViolationException {
         Map<Term, Map<Course, Double>> transcript = s.getTranscript();
