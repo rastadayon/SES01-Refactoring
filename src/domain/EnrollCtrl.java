@@ -7,14 +7,9 @@ import domain.exceptions.EnrollmentRulesViolationException;
 
 public class EnrollCtrl {
 	public void enroll(Student s, List<CSE> courses) throws EnrollmentRulesViolationException {
+        checkHasPassedCourse(s, courses);
         Map<Term, Map<Course, Double>> transcript = s.getTranscript();
 		for (CSE o : courses) {
-            for (Map.Entry<Term, Map<Course, Double>> tr : transcript.entrySet()) {
-                for (Map.Entry<Course, Double> r : tr.getValue().entrySet()) {
-                    if (r.getKey().equals(o.getCourse()) && r.getValue() >= 10)
-                        throw new EnrollmentRulesViolationException(String.format("The student has already passed %s", o.getCourse().getName()));
-                }
-            }
             o.checkHasPassedPrerequisites(s);
             for (CSE o2 : courses) {
                 if (o == o2)
@@ -29,6 +24,14 @@ public class EnrollCtrl {
         for (CSE o : courses)
 			s.takeCourse(o.getCourse(), o.getSection());
 	}
+
+    private void checkHasPassedCourse(Student s, List<CSE> courses) throws EnrollmentRulesViolationException {
+        Map<Term, Map<Course, Double>> transcript = s.getTranscript();
+        for (CSE o : courses) {
+            if(s.hasPassedCourse(o.getCourse()))
+                throw new EnrollmentRulesViolationException(String.format("The student has already passed %s", o.getCourse().getName()));
+        }
+    }
 
     private void checkHasRequestGPARequirements(Student s, List<CSE> courses) throws EnrollmentRulesViolationException {
         int unitsRequested = 0;
