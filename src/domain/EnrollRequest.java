@@ -18,10 +18,7 @@ public class EnrollRequest {
     }
 
     private int getUnitsRequested() {
-        int unitsRequested = 0;
-        for (CourseOffering courseOffering : courseOfferings)
-            unitsRequested += courseOffering.getCourse().getUnits();
-        return unitsRequested;
+        return courseOfferings.stream().mapToInt(co -> co.getCourse().getUnits()).sum();
     }
 
     public List<CourseOffering> getCourseOfferings() {
