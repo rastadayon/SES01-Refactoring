@@ -69,10 +69,10 @@ public class Student {
 		return gpa;
 	}
 
-	public boolean hasPassedCourse(Course c) {
+	public boolean hasPassedCourse(Course course) {
 		for (Map.Entry<Term, Map<Course, Double>> tr : transcript.entrySet()) {
 			for (Map.Entry<Course, Double> r : tr.getValue().entrySet()) {
-				if (r.getKey().equals(c) && r.getValue() >= 10)
+				if (r.getKey().equals(course) && r.getValue() >= 10)
 					return true;
 			}
 		}

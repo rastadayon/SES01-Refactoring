@@ -1,8 +1,5 @@
 package domain;
 
-import java.util.List;
-import java.util.Map;
-
 import domain.exceptions.EnrollmentRulesViolationException;
 
 public class EnrollCtrl {
@@ -11,7 +8,7 @@ public class EnrollCtrl {
         enrollRequest.checkHasRequestGPARequirements();
         enrollRequest.checkPrerequisites();
         enrollRequest.checkTimeConflicts();
-        for (CSE o : enrollRequest.getCourses())
-			enrollRequest.getStudent().takeCourse(o.getCourse(), o.getSection());
+        for (CourseOffering courseOffering : enrollRequest.getCourseOfferings())
+			enrollRequest.getStudent().takeCourse(courseOffering.getCourse(), courseOffering.getSection());
 	}
 }

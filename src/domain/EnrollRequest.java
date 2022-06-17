@@ -5,57 +5,59 @@ import domain.exceptions.EnrollmentRulesViolationException;
 import java.util.List;
 
 public class EnrollRequest {
-    Student s;
-    List<CSE> courses;
+    Student student;
+    List<CourseOffering> courseOfferings;
 
-    public EnrollRequest(Student s, List<CSE> courses) {
-        this.s = s;
-        this.courses = courses;
+    public EnrollRequest(Student student, List<CourseOffering> courseOfferings) {
+        this.student = student;
+        this.courseOfferings = courseOfferings;
     }
 
     public Student getStudent() {
-        return s;
+        return student;
     }
 
     private int getUnitsRequested() {
         int unitsRequested = 0;
-        for (CSE o : courses)
-            unitsRequested += o.getCourse().getUnits();
+        for (CourseOffering courseOffering : courseOfferings)
+            unitsRequested += courseOffering.getCourse().getUnits();
         return unitsRequested;
     }
 
-    public List<CSE> getCourses() {
-        return courses;
+    public List<CourseOffering> getCourseOfferings() {
+        return courseOfferings;
     }
 
     void checkHasRequestGPARequirements() throws EnrollmentRulesViolationException {
-        if ((s.getGPA() < 12 && getUnitsRequested() > 14) ||
-                (s.getGPA() < 16 && getUnitsRequested() > 16) ||
+        if ((student.getGPA() < 12 && getUnitsRequested() > 14) ||
+                (student.getGPA() < 16 && getUnitsRequested() > 16) ||
                 (getUnitsRequested() > 20))
-            throw new EnrollmentRulesViolationException(String.format("Number of units (%d) requested does not match GPA of %f", getUnitsRequested(), s.getGPA()));
+            throw new EnrollmentRulesViolationException(String.format("Number of units (%d) requested does not match GPA of %f", getUnitsRequested(), student.getGPA()));
     }
 
     void checkHasAlreadyPassedCourse() throws EnrollmentRulesViolationException {
-        for (CSE o : courses) {
-            if(s.hasPassedCourse(o.getCourse()))
+        for (CourseOffering o : courseOfferings) {
+            if(student.hasPassedCourse(o.getCourse()))
                 throw new EnrollmentRulesViolationException(String.format("The student has already passed %s", o.getCourse().getName()));
         }
     }
 
     void checkPrerequisites() throws EnrollmentRulesViolationException {
-        for (CSE o : courses)
-            o.checkHasPassedPrerequisites(s);
+        for (CourseOffering o : courseOfferings)
+            o.checkHasPassedPrerequisites(student);
     }
 
     void checkTimeConflicts() throws EnrollmentRulesViolationException {
-        for (CSE o : courses) {
-            for (CSE o2 : courses) {
-                if (o == o2)
+        for (CourseOffering courseOffering : courseOfferings) {
+            for (CourseOffering courseOffering1 : courseOfferings) {
+                if (courseOffering == courseOffering1)
                     continue;
-                if (o.hasSameExamTime(o2))
-                    throw new EnrollmentRulesViolationException(String.format("Two offerings %s and %s have the same exam time", o, o2));
-                if (o.isSameCourse(o2))
-                    throw new EnrollmentRulesViolationException(String.format("%s is requested to be taken twice", o.getCourse().getName()));
+                if (courseOffering.hasSameExamTime(courseOffering1))
+                    throw new EnrollmentRulesViolationException(String.format(
+                            "Two offerings %s and %s have the same exam time", courseOffering, courseOffering1));
+                if (courseOffering.isSameCourse(courseOffering1))
+                    throw new EnrollmentRulesViolationException(String.format(
+                            "%s is requested to be taken twice", courseOffering.getCourse().getName()));
             }
         }
     }

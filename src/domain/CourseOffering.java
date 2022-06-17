@@ -3,24 +3,24 @@ import domain.exceptions.EnrollmentRulesViolationException;
 
 import java.util.Date;
 
-public class CSE {
+public class CourseOffering {
 	private Course course;
 	private int section;
 	private Date examDate;
 
-	public CSE(Course course) {
+	public CourseOffering(Course course) {
 		this.course = course;
 		this.section = 1;
 		this.examDate = null;
 	}
 
-	public CSE(Course course, Date examDate) {
+	public CourseOffering(Course course, Date examDate) {
 		this.course = course;
 		this.section = 1;
 		this.examDate = examDate;
 	}
 
-	public CSE(Course course, Date examDate, int section) {
+	public CourseOffering(Course course, Date examDate, int section) {
 		this.course = course;
 		this.section = section;
 		this.examDate = examDate;
@@ -44,11 +44,11 @@ public class CSE {
 		course.checkHasPassedPrerequisites(s);
 	}
 
-	public boolean hasSameExamTime(CSE o) {
-		return examDate.equals(o.getExamTime());
+	public boolean hasSameExamTime(CourseOffering courseOffering) {
+		return examDate.equals(courseOffering.getExamTime());
 	}
 
-	public boolean isSameCourse(CSE o) {
-		return course.equals(o.getCourse());
+	public boolean isSameCourse(CourseOffering courseOffering) {
+		return course.equals(courseOffering.getCourse());
 	}
 }
