@@ -1,7 +1,10 @@
 package domain;
+import domain.exceptions.EnrollmentRulesViolationException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class Course {
 	private String id;
@@ -57,5 +60,18 @@ public class Course {
 	public boolean equals(Object obj) {
 		Course other = (Course)obj;
 		return id.equals(other.id);
+	}
+
+	public void checkHasPassedPrerequisites(Student s) throws EnrollmentRulesViolationException {
+		nextPre:
+		for (Course pre : getPrerequisites()) {
+			for (Map.Entry<Term, Map<Course, Double>> tr : s.getTranscript().entrySet()) {
+				for (Map.Entry<Course, Double> r : tr.getValue().entrySet()) {
+					if (r.getKey().equals(pre) && r.getValue() >= 10)
+						continue nextPre;
+				}
+			}
+			throw new EnrollmentRulesViolationException(String.format("The student has not passed %s as a prerequisite of %s", pre.getName(), name));
+		}
 	}
 }

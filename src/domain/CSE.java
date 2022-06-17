@@ -1,4 +1,6 @@
 package domain;
+import domain.exceptions.EnrollmentRulesViolationException;
+
 import java.util.Date;
 
 public class CSE {
@@ -37,4 +39,8 @@ public class CSE {
 	}
 
 	public int getSection() { return section; }
+
+	public void checkHasPassedPrerequisites(Student s) throws EnrollmentRulesViolationException {
+		course.checkHasPassedPrerequisites(s);
+	}
 }
