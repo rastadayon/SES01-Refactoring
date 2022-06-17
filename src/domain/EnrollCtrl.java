@@ -25,14 +25,18 @@ public class EnrollCtrl {
                     throw new EnrollmentRulesViolationException(String.format("%s is requested to be taken twice", o.getCourse().getName()));
             }
 		}
-		int unitsRequested = 0;
-		for (CSE o : courses)
-			unitsRequested += o.getCourse().getUnits();
+        checkHasRequestGPARequirements(s, courses);
+        for (CSE o : courses)
+			s.takeCourse(o.getCourse(), o.getSection());
+	}
+
+    private void checkHasRequestGPARequirements(Student s, List<CSE> courses) throws EnrollmentRulesViolationException {
+        int unitsRequested = 0;
+        for (CSE o : courses)
+            unitsRequested += o.getCourse().getUnits();
         if ((s.getGPA() < 12 && unitsRequested > 14) ||
 				(s.getGPA() < 16 && unitsRequested > 16) ||
 				(unitsRequested > 20))
 			throw new EnrollmentRulesViolationException(String.format("Number of units (%d) requested does not match GPA of %f", unitsRequested, s.getGPA()));
-		for (CSE o : courses)
-			s.takeCourse(o.getCourse(), o.getSection());
-	}
+    }
 }
