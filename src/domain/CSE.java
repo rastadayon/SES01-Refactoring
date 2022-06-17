@@ -43,4 +43,12 @@ public class CSE {
 	public void checkHasPassedPrerequisites(Student s) throws EnrollmentRulesViolationException {
 		course.checkHasPassedPrerequisites(s);
 	}
+
+	public boolean hasSameExamTime(CSE o) {
+		return examDate.equals(o.getExamTime());
+	}
+
+	public boolean isSameCourse(CSE o) {
+		return course.equals(o.getCourse());
+	}
 }

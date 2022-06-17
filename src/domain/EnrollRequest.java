@@ -52,9 +52,9 @@ public class EnrollRequest {
             for (CSE o2 : courses) {
                 if (o == o2)
                     continue;
-                if (o.getExamTime().equals(o2.getExamTime()))
+                if (o.hasSameExamTime(o2))
                     throw new EnrollmentRulesViolationException(String.format("Two offerings %s and %s have the same exam time", o, o2));
-                if (o.getCourse().equals(o2.getCourse()))
+                if (o.isSameCourse(o2))
                     throw new EnrollmentRulesViolationException(String.format("%s is requested to be taken twice", o.getCourse().getName()));
             }
         }
