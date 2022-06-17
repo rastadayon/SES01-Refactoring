@@ -68,4 +68,14 @@ public class Student {
 		double gpa = points / totalUnits;
 		return gpa;
 	}
+
+	public boolean hasPassedCourse(Course c) {
+		for (Map.Entry<Term, Map<Course, Double>> tr : transcript.entrySet()) {
+			for (Map.Entry<Course, Double> r : tr.getValue().entrySet()) {
+				if (r.getKey().equals(c) && r.getValue() >= 10)
+					return true;
+			}
+		}
+		return false;
+	}
 }
